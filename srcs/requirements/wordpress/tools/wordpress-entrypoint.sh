@@ -56,4 +56,5 @@ else
 	echo "WordPress configuration already initialized."
 fi
 
+# Start the PHP-FPM service
 exec /usr/sbin/php-fpm82 --nodaemonize --fpm-config /etc/php82/php-fpm.conf
