@@ -38,7 +38,7 @@ if [ ! -e /etc/.firstmount ]; then
 		wp config set WP_REDIS_HOST redis --allow-root
 		wp config set WP_REDIS_PORT 6379 --raw --allow-root
 		wp config set WP_CACHE true --raw --allow-root
-		wp config set FS_METHOD direct --raw --allow-root
+		wp config set FS_METHOD direct --allow-root
 		wp core install --allow-root --url="$DOMAIN_NAME" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL"
 		we plugin install redis-cache --activate --allow-root
 
@@ -56,5 +56,5 @@ else
 	echo "WordPress configuration already initialized."
 fi
 
-# Start the PHP-FPM service
+# Start the PHP-FPM service in the foreground
 exec /usr/sbin/php-fpm82 --nodaemonize --fpm-config /etc/php82/php-fpm.conf
