@@ -1,0 +1,154 @@
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    image: mariadb
+    init: true
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    networks:
+      - inception-network
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: unless-stopped
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    image: nginx
+    init: true
+    depends_on:
+      - wordpress
+      - mariadb
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    ports:
+      - "443:443"
+    networks:
+      - inception-network
+    volumes:
+      - wordpress:/var/www/html 
+    restart: unless-stopped
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    image: wordpress
+    init: true
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - WORDPRESS_TITLE=${WORDPRESS_TITLE}
+      - WORDPRESS_ADMIN_USER=${WORDPRESS_ADMIN_USER}
+      - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
+      - WORDPRESS_ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL}
+      - WORDPRESS_USER=${WORDPRESS_USER}
+      - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
+      - WORDPRESS_EMAIL=${WORDPRESS_EMAIL}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - inception-network
+    volumes:
+      - wordpress:/var/www/html
+    restart: unless-stopped
+
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    image: redis
+    init: true
+    ports:
+      - "6379:6379"
+    networks:
+      - inception-network
+    restart: unless-stopped
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    container_name: ftp
+    image: ftp
+    init: true
+    depends_on:
+      - wordpress
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    networks:
+      - inception-network
+    volumes:
+      - wordpress:/var/www/html
+    restart: unless-stopped
+
+  adminer:
+    build: ./requirements/bonus/adminer
+    container_name: adminer
+    image: adminer
+    init: true
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:8080"
+    networks:
+      - inception-network
+    restart: unless-stopped
+
+  static-site:
+    build: ./requirements/bonus/static-site
+    container_name: static-site
+    image: static-site
+    init: true
+    ports:
+      - "80:80"
+    networks:
+      - inception-network
+    restart: unless-stopped
+
+  portainer:
+    build: ./requirements/bonus/portainer
+    container_name: portainer
+    image: portainer
+    init: true
+    ports:
+      - "9000:9000"
+    networks:
+      - inception-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+    restart: unless-stopped
+
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/mariadb
+
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/wordpress
+
+  portainer:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HOME}/data/portainer
+
+networks:
+  inception-network:
+    name: inception-network
+    driver: bridge
