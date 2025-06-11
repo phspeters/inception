@@ -1,8 +1,7 @@
 FROM alpine:3.21
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache nginx && \
+RUN apk update && apk upgrade && apk add --no-cache \
+    nginx && \
     rm -rf /var/cache/apk/*
 
 RUN rm -rf /var/www/localhost/htdocs/*
