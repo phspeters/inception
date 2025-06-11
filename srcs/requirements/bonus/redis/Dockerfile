@@ -1,7 +1,9 @@
 FROM alpine:3.21
 
 RUN apk update && \
+        apk upgrade && \
         apk add --no-cache redis && \
+        rm -rf /var/cache/apk/* && \
         # Update Redis configuration
         sed -i \
                 -e "s|^bind 127.0.0.1.*|#bind 127.0.0.1|" \
@@ -12,6 +14,5 @@ RUN apk update && \
 
 EXPOSE 6379
 
-# Start Redis using the configuration file
 ENTRYPOINT ["redis-server"]
 CMD ["/etc/redis.conf"]
