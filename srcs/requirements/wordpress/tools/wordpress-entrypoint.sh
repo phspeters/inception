@@ -3,10 +3,10 @@ set -e
 
 # Function to call on error
 log_error() {
-  local exit_code=$?
-  local line_number=$1
-  local command=$2
-  echo "Error on line $line_number: command '$command' exited with status $exit_code." >&2
+	local exit_code=$?
+	local line_number=$1
+	local command=$2
+	echo "Error on line $line_number: command '$command' exited with status $exit_code." >&2
 }
 
 # Trap ERR signal to call log_error function
@@ -16,7 +16,11 @@ trap 'log_error $LINENO "$BASH_COMMAND"' ERR
 # If it's the first time the container is started, initialize the configuration
 if [ ! -e /etc/.firstrun ]; then
 	echo "First run, updating PHP-FPM configuration ..."
+
 	sed -i "s/listen = 127.0.0.1:9000/listen = 9000/g" /etc/php82/php-fpm.d/www.conf
+	sed -i "s/^user = .*/user = www-data/g" /etc/php82/php-fpm.d/www.conf
+	sed -i "s/^group = .*/group = www-data/g" /etc/php82/php-fpm.d/www.conf
+
 	touch /etc/.firstrun
 	echo "PHP-FPM configuration updated."
 else
@@ -40,7 +44,7 @@ if [ ! -e /etc/.firstmount ]; then
 		wp config set WP_CACHE true --raw --allow-root
 		wp config set FS_METHOD direct --allow-root
 		wp core install --allow-root --url="$DOMAIN_NAME" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL"
-		we plugin install redis-cache --activate --allow-root
+		wp plugin install redis-cache --activate --allow-root
 
 		if ! wp user get "$WORDPRESS_USER" --allow-root >/dev/null 2>&1; then
 			echo "Creating wordpress user ..."
@@ -48,8 +52,11 @@ if [ ! -e /etc/.firstmount ]; then
 		fi
 	fi
 
-	# Not recommended for production as it allows anyone to write to the wp-content directory
-	chmod o+w -R /var/www/html/wp-content
+	# Set permissions for WordPress files and directories
+	chown -R www-data:www-data /var/www/html
+	find /var/www/html -type d -exec chmod 755 {} \;
+	find /var/www/html -type f -exec chmod 644 {} \;
+
 	touch /etc/.firstmount
 	echo "WordPress configuration initialized."
 else

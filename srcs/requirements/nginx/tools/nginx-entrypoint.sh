@@ -3,10 +3,10 @@ set -e
 
 # Function to call on error
 log_error() {
-  local exit_code=$?
-  local line_number=$1
-  local command=$2
-  echo "Error on line $line_number: command '$command' exited with status $exit_code." >&2
+	local exit_code=$?
+	local line_number=$1
+	local command=$2
+	echo "Error on line $line_number: command '$command' exited with status $exit_code." >&2
 }
 
 # Trap ERR signal to call log_error function

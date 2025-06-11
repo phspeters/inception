@@ -1,7 +1,9 @@
 FROM alpine:3.21
 
 RUN apk update && \
-	apk add --no-cache mariadb mariadb-client bash
+    apk upgrade && \
+    apk add --no-cache mariadb mariadb-client bash && \
+    rm -rf /var/cache/apk/*
 
 COPY tools/mariadb-entrypoint.sh /usr/local/bin/
 
