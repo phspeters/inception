@@ -32,17 +32,17 @@ fi
 # If it's the first time mounting the data volume, initialize the database
 if [ ! -e /var/lib/mysql/.firstmount ]; then
 	echo "First run, initializing MariaDB database..."
-	mysql_install_db --datadir=/var/lib/mysql --skip-test-db --user=mysql --group=mysql \
+	mariadb --datadir=/var/lib/mysql --skip-test-db --user=mysql --group=mysql \
 	--auth-root-authentication-method=socket >/dev/null 2>&1
 
 	# Start the MariaDB server in the background
-	mysqld_safe --datadir=/var/lib/mysql &
+	mariadb-safe --datadir=/var/lib/mysql &
 
 	# Wait for the server to start
-	mysqladmin ping -u root --silent --wait >/dev/null 2>&1
+	mariadb-admin ping -u root --silent --wait >/dev/null 2>&1
 
 	# Set up the root user and create a test database
-	mysql --protocol=socket -u root -p= <<-EOF
+	mariadb --protocol=socket -u root -p= <<-EOF
 	CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;
 	
 	CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
@@ -57,7 +57,7 @@ if [ ! -e /var/lib/mysql/.firstmount ]; then
 EOF
 
 	# Shut down the temporary server and mark the volume as initialized
-	mysqladmin shutdown
+	mariadb-admin shutdown
 	touch /var/lib/mysql/.firstmount
 	echo "MariaDB database initialized."
 else
@@ -65,5 +65,5 @@ else
 fi
 
 # Start the MariaDB server in the foreground
-exec mysqld_safe --datadir=/var/lib/mysql --user=mysql --group=mysql \
+exec mariadb-safe --datadir=/var/lib/mysql --user=mysql --group=mysql \
 	--auth-root-authentication-method=socket
