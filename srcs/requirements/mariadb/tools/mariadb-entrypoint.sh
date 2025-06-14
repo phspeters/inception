@@ -32,11 +32,11 @@ fi
 # If it's the first time mounting the data volume, initialize the database
 if [ ! -e /var/lib/mysql/.firstmount ]; then
 	echo "First run, initializing MariaDB database..."
-	mariadb --datadir=/var/lib/mysql --skip-test-db --user=mysql --group=mysql \
+	mariadb-install-db --datadir=/var/lib/mysql --skip-test-db --user=mysql --group=mysql \
 	--auth-root-authentication-method=socket >/dev/null 2>&1
 
 	# Start the MariaDB server in the background
-	mariadb-safe --datadir=/var/lib/mysql &
+	mariadbd-safe --datadir=/var/lib/mysql &
 
 	# Wait for the server to start
 	mariadb-admin ping -u root --silent --wait >/dev/null 2>&1
@@ -49,9 +49,9 @@ if [ ! -e /var/lib/mysql/.firstmount ]; then
 	ALTER USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
 	GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%';
 	
-	CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-	ALTER USER 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+	CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
+	ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
+	GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
 	
 	FLUSH PRIVILEGES;
 EOF
@@ -65,5 +65,4 @@ else
 fi
 
 # Start the MariaDB server in the foreground
-exec mariadb-safe --datadir=/var/lib/mysql --user=mysql --group=mysql \
-	--auth-root-authentication-method=socket
+exec mariadbd-safe --datadir=/var/lib/mysql --user=mysql --group=mysql
