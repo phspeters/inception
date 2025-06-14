@@ -26,10 +26,11 @@ if [ ! -e /etc/.firstrun ]; then
 	echo "Certificate and Key generated at /etc/nginx/ssl"
 
 	# Create nginx configuration file
-	cat <<-EOF >/etc/nginx/conf.d/default.conf
+	cat >/etc/nginx/http.d/default.conf <<-EOF 
 	server {
-		listen 443 ssl http2;
-		listen [::]:443 ssl http2;
+		listen 443 ssl;
+		listen [::]:443 ssl;
+		http2 on;
 		server_name $DOMAIN_NAME;
 
 		ssl_certificate /etc/nginx/ssl/nginx.crt;
