@@ -1,11 +1,5 @@
 FROM alpine:3.21
 
-ARG WWW_DATA_UID=82
-ARG WWW_DATA_GID=82
-
-RUN addgroup -g ${WWW_DATA_GID} -S www-data && \
-    adduser -u ${WWW_DATA_UID} -S www-data -G www-data -h /var/www/html -s /sbin/nologin
-
 RUN apk update && apk upgrade && apk add --no-cache \
     bash \
     curl \
