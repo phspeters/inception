@@ -22,7 +22,7 @@ up: check_env create_dirs
 
 down:
 	@printf "Stopping $(PROJECT_NAME) project...\n"
-	@$(COMPOSE_CMD) down -V
+	@$(COMPOSE_CMD) down -v
 
 re: down build
 
@@ -52,9 +52,20 @@ create_dirs:
 
 check_env:
 	@if [ ! -f "$(ENV_FILE)" ]; then \
-		printf "\033[31mError: Environment file $(ENV_FILE) not found.\033[0m\n"; \
-		printf "Please copy an example .env file to $(ENV_FILE) and configure it.\n"; \
-		exit 1; \
+		printf "\033[33mWarning: Environment file $(ENV_FILE) not found. Creating a default one.\033[0m\n"; \
+		printf "Please review $(ENV_FILE) and adjust values if necessary.\n"; \
+		printf "DOMAIN_NAME=pehenri2.42.fr\n\
+MYSQL_USER=user\n\
+MYSQL_PASSWORD=1234\n\
+MYSQL_DATABASE=mariadb\n\
+MYSQL_ROOT_PASSWORD=1234\n\n\
+WORDPRESS_TITLE=Inception\n\
+WORDPRESS_ADMIN_USER=owner\n\
+WORDPRESS_ADMIN_PASSWORD=1234\n\
+WORDPRESS_ADMIN_EMAIL=pehenri2@student.42sp.org.br\n\
+WORDPRESS_USER=user\n\
+WORDPRESS_PASSWORD=1234\n\
+WORDPRESS_EMAIL=pehenri2@student.42sp.org.br\n" > $(ENV_FILE); \
 	fi
 
 help:
