@@ -11,6 +11,6 @@ RUN curl -L https://github.com/portainer/portainer/releases/download/2.30.1/port
     && tar xzf portainer.tar.gz \
     && rm portainer.tar.gz
 
-EXPOSE 9000
+EXPOSE 8000 9000 9443
 
 ENTRYPOINT ["/app/portainer/portainer"]
