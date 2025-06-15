@@ -6,7 +6,9 @@ RUN apk update && apk upgrade && apk add --no-cache \
 
 RUN rm -rf /var/www/localhost/htdocs/*
 
-COPY ./tools /var/www/localhost/htdocs
+COPY ./tools/index.html /var/www/localhost/htdocs
+
+COPY ./tools/default.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 80
 
