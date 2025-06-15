@@ -62,10 +62,10 @@ MYSQL_ROOT_PASSWORD=1234\n\n\
 WORDPRESS_TITLE=Inception\n\
 WORDPRESS_ADMIN_USER=owner\n\
 WORDPRESS_ADMIN_PASSWORD=1234\n\
-WORDPRESS_ADMIN_EMAIL=pehenri2@student.42sp.org.br\n\
+WORDPRESS_ADMIN_EMAIL=owner@student.42sp.org.br\n\
 WORDPRESS_USER=user\n\
 WORDPRESS_PASSWORD=1234\n\
-WORDPRESS_EMAIL=pehenri2@student.42sp.org.br\n\n"\
+WORDPRESS_EMAIL=user@student.42sp.org.br\n\n"\
 FTP_PASSWORD=1234\n > $(ENV_FILE); \
 	fi
 

@@ -28,14 +28,15 @@ else
 fi
 
 # If it's the first time mounting the data volume, initialize the WordPress configuration
-if [ ! -e /etc/.firstmount ]; then
+cd /var/www/html
+if [ ! -e .firstmount ]; then
 	echo "First run, initializing WordPress configuration ..."
 	# Wait for the MariaDB server to be ready
 	mariadb-admin ping --protocol=tcp -h mariadb -u "$MYSQL_USER" --password="$MYSQL_PASSWORD" --wait >/dev/null 2>&1
 
-	if [ ! -f /var/www/html/wp-config.php ]; then
+	if [ ! -f wp-config.php ]; then
 		echo "Installing WordPress ..."
-		if [ ! -f /var/www/html/wp-includes/version.php ]; then
+		if [ ! -f wp-includes/version.php ]; then
 			wp core download --allow-root;
 		fi
 		wp config create --allow-root --dbname="$MYSQL_DATABASE" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --dbhost="mariadb"
@@ -45,6 +46,7 @@ if [ ! -e /etc/.firstmount ]; then
 		wp config set FS_METHOD direct --allow-root
 		wp core install --allow-root --url="$DOMAIN_NAME" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL"
 		wp plugin install redis-cache --activate --allow-root
+		wp redis enable --allow-root
 
 		if ! wp user get "$WORDPRESS_USER" --allow-root >/dev/null 2>&1; then
 			echo "Creating wordpress user ..."

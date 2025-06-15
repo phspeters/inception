@@ -1,5 +1,9 @@
 FROM alpine:3.21
 
+ARG WWW_DATA_UID=82
+
+RUN adduser -u ${WWW_DATA_UID} -S www-data -G www-data -h /var/www/html -s /sbin/nologin
+
 RUN apk update && apk upgrade && apk add --no-cache \
     vsftpd \
     shadow && \
