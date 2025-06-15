@@ -36,22 +36,18 @@ if [ ! -e /var/lib/mysql/.firstmount ]; then
 	--auth-root-authentication-method=socket >/dev/null 2>&1
 
 	# Start the MariaDB server in the background
-	mariadbd-safe --datadir=/var/lib/mysql &
+	mariadbd-safe --datadir=/var/lib/mysql --user=mysql &
 
 	# Wait for the server to start
 	mariadb-admin ping -u root --silent --wait >/dev/null 2>&1
 
 	# Set up the root user and create a test database
-	mariadb --protocol=socket -u root -p= <<-EOF
+	mariadb --protocol=socket -u root <<-EOF
 	CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;
 	
 	CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
 	ALTER USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
 	GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%';
-	
-	CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-	ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-	GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
 	
 	FLUSH PRIVILEGES;
 EOF

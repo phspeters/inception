@@ -4,16 +4,15 @@ RUN apk update && apk upgrade && apk add --no-cache \
     php82 \
     php82-session \
     php82-mysqli \
+    php82-curl \
     wget
 
-WORKDIR /var/www
+WORKDIR /var/www/html
 
-RUN wget https://github.com/vrana/adminer/releases/download/v5.3.0/adminer-5.3.0.php && \
-    mv adminer-5.3.0.php index.php && \
-    chown -R root:root /var/www/
+RUN wget http://www.adminer.org/latest.php -O /var/www/html/index.php
 
 EXPOSE 8080
 
 ENTRYPOINT [ "php82" ]
 
-CMD [ "-S", "[::]:8080", "-t", "/var/www" ]
+CMD [ "-S", "[::]:8080", "-t", "/var/www/html" ]

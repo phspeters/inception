@@ -24,16 +24,16 @@ down:
 	@printf "Stopping $(PROJECT_NAME) project...\n"
 	@$(COMPOSE_CMD) down -v
 
-re: down build
+re: fclean build
 
 clean: down
 	@printf "Cleaning $(PROJECT_NAME) project...\n"
 	@printf "Pruning dangling Docker resources...\n"
 	@docker system prune --force
-	@printf "Removing data from host volumes...\n"
-	@if [ -d "$(WORDPRESS_DATA_DIR)" ]; then sudo rm -rf $(WORDPRESS_DATA_DIR)/*; fi
-	@if [ -d "$(MARIADB_DATA_DIR)" ]; then sudo rm -rf $(MARIADB_DATA_DIR)/*; fi
-	@if [ -d "$(PORTAINER_DATA_DIR)" ]; then sudo rm -rf $(PORTAINER_DATA_DIR)/*; fi
+	@printf "Removing data directories from host...\n"
+	@if [ -d "$(WORDPRESS_DATA_DIR)" ]; then sudo rm -rf $(WORDPRESS_DATA_DIR); fi
+	@if [ -d "$(MARIADB_DATA_DIR)" ]; then sudo rm -rf $(MARIADB_DATA_DIR); fi
+	@if [ -d "$(PORTAINER_DATA_DIR)" ]; then sudo rm -rf $(PORTAINER_DATA_DIR); fi
 
 fclean: clean
 	@printf "Performing total clean for $(PROJECT_NAME)...\n"
@@ -57,8 +57,7 @@ check_env:
 		printf "DOMAIN_NAME=pehenri2.42.fr\n\
 MYSQL_USER=user\n\
 MYSQL_PASSWORD=1234\n\
-MYSQL_DATABASE=mariadb\n\
-MYSQL_ROOT_PASSWORD=1234\n\n\
+MYSQL_DATABASE=wordpress\n\n\
 WORDPRESS_TITLE=Inception\n\
 WORDPRESS_ADMIN_USER=owner\n\
 WORDPRESS_ADMIN_PASSWORD=1234\n\
