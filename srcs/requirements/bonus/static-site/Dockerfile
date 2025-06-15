@@ -8,7 +8,7 @@ RUN rm -rf /var/www/localhost/htdocs/*
 
 COPY ./tools/index.html /var/www/localhost/htdocs
 
-COPY ./tools/default.conf /etc/nginx/http.d/default.conf
+COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 80
 

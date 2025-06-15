@@ -44,7 +44,7 @@ if [ ! -e .firstmount ]; then
 		wp config set WP_REDIS_PORT 6379 --raw --allow-root
 		wp config set WP_CACHE true --raw --allow-root
 		wp config set FS_METHOD direct --allow-root
-		wp core install --allow-root --url="$DOMAIN_NAME" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL"
+		wp core install --allow-root --url="https://$DOMAIN_NAME" --title="$WORDPRESS_TITLE" --admin_user="$WORDPRESS_ADMIN_USER" --admin_password="$WORDPRESS_ADMIN_PASSWORD" --admin_email="$WORDPRESS_ADMIN_EMAIL"
 		wp plugin install redis-cache --activate --allow-root
 		wp redis enable --allow-root
 
