@@ -14,7 +14,6 @@ log_error() {
 trap 'log_error $LINENO "$BASH_COMMAND"' ERR
 
 FTP_USER="www-data"
-FTP_USER_HOME="/var/www/html"
 
 if [ -z "$FTP_PASSWORD" ]; then
 	echo "Error: FTP_PASSWORD environment variable for user $FTP_USER must be set." >&2
