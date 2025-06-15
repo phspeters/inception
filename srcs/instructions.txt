@@ -1,0 +1,42 @@
+# Docker
+docker ps
+docker volume ls
+docker volume inspect <volume>
+docker network ls
+docker network inspect <network>
+
+# Nginx
+curl https://<login>.42.fr
+curl http://localhost
+
+# Wordpress
+https://<login>.42.fr
+https://<login>.42.fr/wp-admin/
+
+# Mariadb
+docker exec -it mariadb mariadb -u user -p1234
+use wordpress;
+show tables;
+
+# Redis
+wp redis status --allow-root --path=/etc/www/html
+docker exec -it redis redis-cli
+monitor
+# Access wordpress site and watch the cache being updated
+
+# Ftp
+ftp localhost
+passive
+put <file> / del <file>
+
+# Adminer
+curl http://localhost:8080
+
+# Portainer
+curl http://localhost:9000
+
+# Static site
+curl http://localhost
+
+# Certificate
+openssl s_client -connect https://<login>.42.fr
