@@ -67,8 +67,6 @@ services:
     container_name: redis
     image: redis
     init: true
-    ports:
-      - "6379:6379"
     networks:
       - inception-network
     restart: unless-stopped

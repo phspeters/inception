@@ -19,7 +19,7 @@ use wordpress;
 show tables;
 
 # Redis
-wp redis status --allow-root --path=/etc/www/html
+docker exec -t wordpress wp redis status --allow-root --path=/var/www/html
 docker exec -it redis redis-cli
 monitor
 # Access wordpress site and watch the cache being updated

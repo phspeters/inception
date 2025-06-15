@@ -54,7 +54,7 @@ check_env:
 	@if [ ! -f "$(ENV_FILE)" ]; then \
 		printf "\033[33mWarning: Environment file $(ENV_FILE) not found. Creating a default one.\033[0m\n"; \
 		printf "Please review $(ENV_FILE) and adjust values if necessary.\n"; \
-		printf "DOMAIN_NAME=pehenri2.42.fr\n\
+		printf "DOMAIN_NAME=pehenri2.42.fr\n\n\
 MYSQL_USER=user\n\
 MYSQL_PASSWORD=1234\n\
 MYSQL_DATABASE=wordpress\n\n\
@@ -65,7 +65,7 @@ WORDPRESS_ADMIN_EMAIL=owner@student.42sp.org.br\n\
 WORDPRESS_USER=user\n\
 WORDPRESS_PASSWORD=1234\n\
 WORDPRESS_EMAIL=user@student.42sp.org.br\n\n"\
-FTP_PASSWORD=1234\n > $(ENV_FILE); \
+FTP_PASSWORD=1234 > $(ENV_FILE); \
 	fi
 
 help:
